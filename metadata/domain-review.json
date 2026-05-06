@@ -1,0 +1,73 @@
+{
+  "repo": "raystep",
+  "language": "C++",
+  "category": "Graphics",
+  "goal": "Render signed-distance scenes to PPM fixtures with camera controls.",
+  "review_model": {
+    "terms": [
+      "geometry span",
+      "atlas pressure",
+      "shader drift",
+      "render budget"
+    ],
+    "lanes": [
+      "ship",
+      "watch",
+      "hold"
+    ],
+    "score": "signal * 2 + slack + confidence - drag * 3",
+    "purpose": "surface the domain-specific cases that need the most careful review"
+  },
+  "cases": [
+    {
+      "name": "baseline",
+      "focus": "geometry span",
+      "signal": 52,
+      "slack": 54,
+      "drag": 10,
+      "confidence": 49,
+      "score": 177,
+      "lane": "ship"
+    },
+    {
+      "name": "stress",
+      "focus": "atlas pressure",
+      "signal": 54,
+      "slack": 22,
+      "drag": 16,
+      "confidence": 83,
+      "score": 165,
+      "lane": "ship"
+    },
+    {
+      "name": "edge",
+      "focus": "shader drift",
+      "signal": 83,
+      "slack": 39,
+      "drag": 17,
+      "confidence": 54,
+      "score": 208,
+      "lane": "ship"
+    },
+    {
+      "name": "recovery",
+      "focus": "render budget",
+      "signal": 74,
+      "slack": 47,
+      "drag": 25,
+      "confidence": 84,
+      "score": 204,
+      "lane": "ship"
+    },
+    {
+      "name": "stale",
+      "focus": "geometry span",
+      "signal": 75,
+      "slack": 34,
+      "drag": 17,
+      "confidence": 79,
+      "score": 212,
+      "lane": "ship"
+    }
+  ]
+}

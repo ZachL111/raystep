@@ -1,68 +1,40 @@
 # raystep
 
-`raystep` is a focused C++ codebase around render signed-distance scenes to PPM fixtures with camera controls. It is meant to be easy to inspect, run, and extend without a hosted service.
+`raystep` is a C++ project in graphics. Its focus is to render signed-distance scenes to PPM fixtures with camera controls.
 
-## Raystep Walkthrough
+## Project Rationale
 
-I would read the project from the outside in: command, fixture, model, then roadmap. That keeps the graphics idea grounded in files that can be checked locally.
+The point is to make a small domain rule concrete enough that a reader can change it and immediately see what broke.
 
-## Reason For The Project
+## Raystep Review Notes
 
-I use this kind of project to make a rule visible before adding more machinery around it. The important part here is not the size of the codebase. It is that the input signals, scoring rule, fixture data, and expected output can all be checked in one sitting.
+The first comparison I would make is `geometry span` against `atlas pressure` because it shows where the rule is most opinionated.
 
-## Data Notes
+## Feature Set
 
-The examples are meant to be readable before they are exhaustive. They cover enough variation to show how latency and risk can pull a decision below the threshold.
+- `fixtures/domain_review.csv` adds cases for geometry span and atlas pressure.
+- `metadata/domain-review.json` records the same cases in structured form.
+- `config/review-profile.json` captures the read order and the two review questions.
+- `examples/raystep-walkthrough.md` walks through the case spread.
+- The C++ code includes a review path for `geometry span` and `atlas pressure`.
+- `docs/field-notes.md` explains the strongest and weakest cases.
 
-## How It Is Put Together
+## Architecture
 
-The design is intentionally direct: parse or construct a signal, score it, classify it, and verify the expected branch. This makes the repository useful for studying graphics behavior without needing a service or database unless the language project itself is SQL. The C++ project uses a small library boundary and a compiled assertion harness.
+The fixture data drives the tests. The code stays thin, while `metadata/domain-review.json` and `config/review-profile.json` explain what each case is meant to protect.
 
-## Capabilities
+The C++ implementation avoids hidden state so fixture changes are easy to reason about.
 
-- Models geometry data with deterministic scoring and explicit review decisions.
-- Uses fixture data to keep layout fixtures changes visible in code review.
-- Includes extended examples for render inputs, including `surge` and `degraded`.
-- Documents stable output tradeoffs in `docs/operations.md`.
-- Runs locally with a single verification command and no external credentials.
-
-## Command Examples
+## Usage
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1
 ```
 
-This runs the language-level build or test path against the compact fixture set.
+## Test Command
 
-## Check The Work
+The check exercises the source code and the review fixture. `stale` is the high score at 212; `stress` is the low score at 165.
 
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/audit.ps1
-```
+## Next Improvements
 
-The audit command checks repository structure and README constraints before it delegates to the verifier.
-
-## Where Things Live
-
-- `src`: primary implementation
-- `tests`: verification harness
-- `fixtures`: compact golden scenarios
-- `examples`: expanded scenario set
-- `metadata`: project constants and verification metadata
-- `docs`: operations and extension notes
-- `scripts`: local verification and audit commands
-
-## Possible Extensions
-
-- Split the scoring constants into a typed configuration object and validate it before use.
-- Add a comparison mode that shows how decisions change when one signal is adjusted.
-- Add a loader for `examples/extended_cases.csv` and promote selected cases into the language test suite.
-- Add one more graphics fixture that focuses on a malformed or borderline input.
-
-## Tradeoffs
-
-The fixture set is deliberately small. That keeps the review surface clear, but it also means the model should not be treated as a complete domain simulator.
-
-## Getting It Running
-
-Install C++ and run the commands from the repository root. The project does not need credentials or a hosted service.
+This remains a local project with deterministic fixtures. It does not depend on credentials, hosted services, or live data. Future work should add richer malformed inputs before widening the public API.
